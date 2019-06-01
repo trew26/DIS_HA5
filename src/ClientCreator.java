@@ -28,12 +28,12 @@ public class ClientCreator {
         t1.interrupt();
         //testing
 
-        //table.forEach(
-        //        (k,v) -> System.out.println("Key : " + k + ", Value : " + v));
+        table.forEach(
+                (k,v) -> System.out.println("Key : " + k + ", Value : " + v));
 
-        //while ((line = log_reader.readLine()) != null) {
-        //    System.out.println("Lines in log: " + line);
-        //}
+        while ((line = log_reader.readLine()) != null) {
+            System.out.println("Lines in log: " + line);
+        }
 
         persistenceManager.safe(persistenceManager.getBuffer());
     }

@@ -38,7 +38,7 @@ public class PersistenceManager {
         return PersistenceManager.instance;
     }
 
-    public void write(String taid, String pageid, String lsn, String data) {
+    public synchronized void write(String taid, String pageid, String lsn, String data) {
         //save comma separated string as log entry
         String csv = "" + taid + "," + pageid + "," + lsn + "," + data;
         int ipid = Integer.parseInt(pageid);
@@ -67,25 +67,25 @@ public class PersistenceManager {
 
     public synchronized String beginTransaction() {
         Integer new_id = id++;
-
+        String id = String.format("%02d", new_id);
         try {
-            this.buffered_log_writer.write("BOT " + new_id + "\n");
+            this.buffered_log_writer.write("BOT " + id + " " + this.value() + "\n");
             this.buffered_log_writer.flush();
         } catch (Exception e) {
             System.out.println("Writing to log failed, Exception: " + e);
         }
 
-        return String.format("%02d", new_id);
+        return id;
     }
 
     //commits the stored pages to the buffer
-    public void commit(String taid) {
+    public synchronized void commit(String taid) {
 
         Set<Integer> keys = getKeysbyValue(this.buffer, taid);
         try {
             FileWriter log_writer = new FileWriter("log.txt", true);
             this.buffered_log_writer = new BufferedWriter(log_writer);
-            buffered_log_writer.write(taid +" comitted \n");
+            buffered_log_writer.write("COMMIT " +  taid + " " + this.value() +"\n");
             buffered_log_writer.flush();
         } catch (Exception e) {
             System.out.println("Fehler");

@@ -49,6 +49,22 @@ public class ClientThread extends Thread {
             catch (InterruptedException e) {
                 return;
             }
+            System.out.println(taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "fourth");
+            try {
+                Thread.sleep(sl_milli);
+            }
+            catch (InterruptedException e) {
+                return;
+            }
+            System.out.println(taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "fifth");
+            try {
+                Thread.sleep(sl_milli);
+            }
+            catch (InterruptedException e) {
+                return;
+            }
              pm.commit(taid);
         }
     }
