@@ -23,10 +23,10 @@ public class ClientThread extends Thread {
         int pageID_high = pageID_low + 10;
         while (true){
 
-            int taid = pm.beginTransaction();
+            String taid = pm.beginTransaction();
             System.out.println(taid);
 
-            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "first   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "first   " + taid);
             try {
                 Thread.sleep(sl_milli);
             }
@@ -34,7 +34,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "second   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "second   " + taid);
             try {
                 Thread.sleep(sl_milli);
             }
@@ -42,7 +42,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "third   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "third   " + taid);
             try {
                 Thread.sleep(sl_milli);
             }
@@ -53,8 +53,9 @@ public class ClientThread extends Thread {
         }
     }
 
-    private int getRandom(int high, int low){
+    private String getRandom(int high, int low){
         Random r = new Random();
-        return r.nextInt(high - low) + low;
+        int pid = r.nextInt(high - low) + low;
+        return String.format("%02d", pid);
     }
 }
