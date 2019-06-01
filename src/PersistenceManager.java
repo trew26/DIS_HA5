@@ -16,6 +16,7 @@ public class PersistenceManager {
     private static PersistenceManager instance;
     private String stored_lsn;
 
+    // Verhindere die Erzeugung des Objektes über andere Methoden
     private PersistenceManager() throws IOException {
         this.buffer = new Hashtable<>();
 
@@ -26,6 +27,11 @@ public class PersistenceManager {
         this.buffered_log_writer = new BufferedWriter(log_writer);
     }
 
+    // Eine Zugriffsmethode auf Klassenebene, welches dir '''einmal''' ein konkretes
+    // Objekt erzeugt und dieses zurückliefert.
+    // Durch 'synchronized' wird sichergestellt dass diese Methode nur von einem Thread
+    // zu einer Zeit durchlaufen wird. Der nächste Thread erhält immer eine komplett
+    // initialisierte Instanz.
     public static synchronized PersistenceManager getInstance() throws IOException {
         if (PersistenceManager.instance == null) {
             PersistenceManager.instance = new PersistenceManager();
@@ -74,17 +80,25 @@ public class PersistenceManager {
     }
 
     //commits the stored pages to the buffer
-    public void commit(int taid) {
+    public void commit(String taid) {
 
+        Set<Integer> keys = getKeysbyValue(this.buffer, taid);
+        try {
+            FileWriter log_writer = new FileWriter("log.txt", true);
+            this.buffered_log_writer = new BufferedWriter(log_writer);
+            buffered_log_writer.write(taid +" comitted \n");
+            buffered_log_writer.flush();
+        } catch (Exception e) {
+            System.out.println("Fehler");
+        }
     }
-
 
     //return the current LSN value
     public synchronized String value() {
         return String.format("%02d", c++);
     }
 
-    public Set<Integer> getKeysbyValue(HashMap<Integer, String> table, String value) {
+    public Set<Integer> getKeysbyValue(Hashtable<Integer, String> table, String value) {
         Set<Integer> keys = new HashSet<Integer>();
         for (Map.Entry<Integer, String> entry : table.entrySet()) {
             if (entry.getValue().substring(0, 2).equals(value)) {
