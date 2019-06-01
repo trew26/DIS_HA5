@@ -1,5 +1,3 @@
-import javax.print.PrintService;
-
 public class ClientCreator {
 
     public static void main(String[] args) {
@@ -11,8 +9,8 @@ public class ClientCreator {
 
         System.out.println("Hashtable after insert from ClientCreator: \n" + persistenceManager.getBuffer());
 
-        Thread t0 = new ClientThread("Thread0");
-        Thread t1 = new ClientThread("Thread1");
+        Thread t0 = new ClientThread(0);
+        Thread t1 = new ClientThread(1);
 
         t0.start();
         t1.start();
