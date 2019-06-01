@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.file.FileSystemNotFoundException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -45,6 +44,11 @@ public class PersistenceManager {
             buffered_log_writer.flush();
         } catch (Exception e) {
             System.out.println("Fehler");
+        }
+
+        int unsaved_commits = this.count_unsaved_commits();
+        if (unsaved_commits >= 5) {
+            this.safe(buffer);
         }
     }
 
@@ -120,6 +124,7 @@ public class PersistenceManager {
                 BufferedWriter buffered_storage_writer = new BufferedWriter(log_writer);
                 buffered_storage_writer.write(data);
                 buffered_storage_writer.close();
+                System.out.println("Saved: " + entry.getValue());
 
             } catch (IOException e) {
                 System.out.println("Failed to create BufferedWriter. Exception: " + e);
@@ -128,43 +133,58 @@ public class PersistenceManager {
         }
     }
 
-    public Integer count_commits() {
-        int _counter = 0;
-        int log_index = -1;
-        int second_log_index = -1;
-        int latest_commit_lsn = 0;
+    public Integer count_unsaved_commits() {
+        int uncommited_tas = 0;
+        int log_index = 0;
         try {
             BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
             String line;
-            // read a line from the log
             while ((line = log_reader.readLine()) != null) {
                 log_index++;
-                List<String> items = Arrays.asList(line.split(","));
-                if (line.contains("COMMIT")) {
-                    //find the latest lsn of the transaction that is committed in the current log entry
-                    int taid = Integer.parseInt(items.get(1));
-                    String line2;
-                    while ((line2 = log_reader.readLine()) != null && second_log_index < log_index) {
-                        second_log_index++;
-                        List<String> items2 = Arrays.asList(line.split(","));
-                        if (items2.size() > 2) {
-                            int taid2 = Integer.parseInt(items2.get(0));
-                            if (taid == taid2) {
-                                latest_commit_lsn =  Integer.parseInt(items2.get(2));
-                            }
-                        }
-                    }
+                if (line.contains("COMMIT")) {  // if the current line is a commit
 
+                    List<String> items = Arrays.asList(line.split(" "));
+                    int taid = Integer.parseInt(items.get(1));
+
+                    // find last lsn of that ta before this commit
+                    int latest_commit_lsn = find_latest_ta_lsn(taid, log_index);
+
+                    // if this lsn is greater than the last lsn that has been stored, this is a commit that has not yet been saved
                     if (latest_commit_lsn > Integer.parseInt(this.stored_lsn)) {
-                        _counter++;
+                        uncommited_tas++;
                     }
                 }
             }
         } catch (Exception e) {
             System.out.println("Failed to read log. Exception: " + e);
         }
+        return uncommited_tas;
+    }
 
-        return _counter;
+    // find the latest lsn of a ta in the log, that is smaller than some index
+    public int find_latest_ta_lsn(int taid, int line_limit) {
+        int log_index = 0;
+        int latest_ta_lsn = 0;
+        try {
+            BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
+            String line;
+
+            // go through the part of the log that has been parsed up to the point of line_limit
+            while ((line = log_reader.readLine()) != null && log_index < line_limit ) {
+                log_index++;
+                List<String> items2 = Arrays.asList(line.split(","));
+
+                if (items2.size() > 2) {  // the line contains ta information and lsn
+                    int curr_taid = Integer.parseInt(items2.get(0));
+                    if (taid == curr_taid) {  // if its the ta we are interested in update latest lsbn value
+                        latest_ta_lsn =  Integer.parseInt(items2.get(2));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to read log. Exception: " + e);
+        }
+        return latest_ta_lsn;
     }
 
     public void getWinnerTA(int fail_lsn){

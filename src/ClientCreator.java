@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Hashtable;
 
@@ -43,7 +42,7 @@ public class ClientCreator {
 
 
 
-        persistenceManager.count_commits();
+        persistenceManager.count_unsaved_commits();
     }
 
 
