@@ -13,7 +13,7 @@ public class ClientThread extends Thread {
             int taid = pm.beginTransaction();
             System.out.println(taid);
             //   pm.write();
-            pm.write(1, taid, "first");
+            pm.write(1, taid, "first" + taid);
             try {
                 Thread.sleep(2000);
             }
@@ -21,7 +21,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(1, taid, "second");
+            pm.write(2, taid, "second" + taid);
             try {
                 Thread.sleep(2000);
             }
@@ -29,13 +29,14 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(1, taid, "third");
+            pm.write(3, taid, "third" + taid);
             try {
                 Thread.sleep(2000);
             }
             catch (InterruptedException e) {
                 return;
             }
+            System.out.println("Hashtable after insert from ClientCreator: \n" +taid + " " + pm.getBuffer());
         }
     }
 }
