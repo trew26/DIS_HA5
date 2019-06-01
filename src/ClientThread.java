@@ -1,3 +1,5 @@
+import java.util.Random;
+
 public class ClientThread extends Thread {
 
     PersistenceManager pm = PersistenceManager.getInstance();
@@ -7,13 +9,19 @@ public class ClientThread extends Thread {
         this.number = number;
     }
 
+    private int getPageID(){
+        int pageID_low = number*10;
+        int pageID_high = pageID_low + 10;
+        Random r = new Random();
+        return r.nextInt(pageID_high - pageID_low) + pageID_low;
+    }
     public void run() {
         while(true) {
 
             int taid = pm.beginTransaction();
             System.out.println(taid);
             //   pm.write();
-            pm.write(1, taid, "first" + taid);
+            pm.write(getPageID(), taid, "first" + taid);
             try {
                 Thread.sleep(2000);
             }
@@ -21,7 +29,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(2, taid, "second" + taid);
+            pm.write(getPageID(), taid, "second" + taid);
             try {
                 Thread.sleep(2000);
             }
@@ -29,7 +37,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(3, taid, "third" + taid);
+            pm.write(getPageID(), taid, "third" + taid);
             try {
                 Thread.sleep(2000);
             }
