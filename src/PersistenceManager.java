@@ -21,7 +21,7 @@ public class PersistenceManager {
         FileReader log_reader = new FileReader("log.txt");
         this.buffered_log_reader = new BufferedReader(log_reader);
 
-        FileWriter log_writer = new FileWriter("log.txt", true);
+        FileWriter log_writer = new FileWriter("log.txt", false);
         this.buffered_log_writer = new BufferedWriter(log_writer);
     }
 
@@ -195,14 +195,20 @@ public class PersistenceManager {
             String line;
             // read a line from the log
             while ((line = log_reader.readLine()) != null) {
-                log_index++;
-
-                List<String> items = Arrays.asList(line.split(","));
                 if (line.contains("COMMIT")) {
-                    //find the latest lsn of the transaction that is committed in the current log entry
-                    int taid = Integer.parseInt(items.get(1));
 
-                    _counter++;
+                    String[] splitted = line.split("\\s+");
+                    String lsn = splitted[2];
+                    int iLSN = Integer.parseInt(lsn);
+                    String taid = splitted[1];
+                    //falls der fehler vor dem commit auftritt
+                    if (iLSN > fail_lsn){
+                        Set<Integer> keys = getKeysbyValue(this.buffer, taid);
+                        for (int pid : keys){
+
+                        }
+                    }
+
                 }
             }
         } catch (Exception e) {
@@ -210,4 +216,7 @@ public class PersistenceManager {
         }
     }
 
+    public void redo(Set<Integer> keys) {
+
+    }
 }
