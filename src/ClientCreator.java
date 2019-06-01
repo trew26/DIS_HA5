@@ -28,6 +28,7 @@ public class ClientCreator {
         t1.interrupt();
         //testing
 
+        //persistenceManager.getKeysByValue(table, 1);
         table.forEach(
                 (k,v) -> System.out.println("Key : " + k + ", Value : " + v));
 
