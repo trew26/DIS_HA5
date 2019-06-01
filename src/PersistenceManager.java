@@ -95,16 +95,30 @@ public class PersistenceManager {
     }
 
     public void safe (Hashtable buffer) {
-
-        // getting entrySet() into Set
         Set<Entry<Integer, String>> entrySet = buffer.entrySet();
 
-        // for-each loop
         for(Entry<Integer, String> entry : entrySet) {
 
+            //System.out.println("KEY: " + entry.getKey() + ", VALUE: " + entry.getValue());
 
+            // load the data from the current entry of the hashtable
+            List<String> items = Arrays.asList(entry.getValue().split("\\s*,\\s*"));
+            String taid = items.get(0);
+            String pageid = items.get(1);
+            String lsn = items.get(2);
+            String data = items.get(3);
 
+            // create the file in the storage folder and write data
+            try {
+                FileWriter log_writer = new FileWriter("storage/" + pageid + ".txt");
+                BufferedWriter buffered_storage_writer = new BufferedWriter(log_writer);
+                buffered_storage_writer.write(data);
+                buffered_storage_writer.close();
+
+            } catch (IOException e) {
+                System.out.println("Failed to create BufferedWriter. Exception: " + e);
+            }
         }
-
     }
+
 }
