@@ -80,7 +80,7 @@ public class PersistenceManager {
         try {
             FileWriter log_writer = new FileWriter("log.txt", true);
             this.buffered_log_writer = new BufferedWriter(log_writer);
-            buffered_log_writer.write("COMMIT " + taid + "\n");
+            buffered_log_writer.write("COMMIT " + taid + " " + this.value() + "\n");
             buffered_log_writer.flush();
         } catch (Exception e) {
             System.out.println("Fehler");
@@ -165,6 +165,29 @@ public class PersistenceManager {
         }
 
         return _counter;
+    }
+
+    public void getWinnerTA(int fail_lsn){
+        int _counter = 0;
+        int log_index = 0;
+        try {
+            BufferedReader log_reader = this.getReader();
+            String line;
+            // read a line from the log
+            while ((line = log_reader.readLine()) != null) {
+                log_index++;
+
+                List<String> items = Arrays.asList(line.split(","));
+                if (line.contains("COMMIT")) {
+                    //find the latest lsn of the transaction that is committed in the current log entry
+                    int taid = Integer.parseInt(items.get(1));
+
+                    _counter++;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to read log. Exception: " + e);
+        }
     }
 
 }
