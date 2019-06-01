@@ -19,8 +19,6 @@ public class PersistenceManager {
 
         FileWriter log_writer = new FileWriter("log.txt", true);
         this.buffered_log_writer = new BufferedWriter(log_writer);
-        buffered_log_writer.write("Hello from PersistenceManager\n");
-        buffered_log_writer.flush();
     }
 
     // Eine Zugriffsmethode auf Klassenebene, welches dir '''einmal''' ein konkretes
@@ -35,10 +33,17 @@ public class PersistenceManager {
         return PersistenceManager.instance;
     }
 
-    public void write (int pageid, int taid, String data) {
+    public void write (int pageid, int taid, int lsn, String data) {
         //save comma separated string as log entry
-        String csv = "" + pageid + "," + taid + "," + data;
+        String csv = "" + pageid + "," + taid + "," + lsn + "," + data;
         this.buffer.put(pageid, csv);
+        try {
+            FileWriter log_writer = new FileWriter("log.txt", true);
+            this.buffered_log_writer = new BufferedWriter(log_writer);
+            buffered_log_writer.write(csv +"\n");
+            buffered_log_writer.flush();
+        }
+        catch (Exception e){System.out.println("Fehler");}
     }
 
     public Hashtable getBuffer() {
@@ -59,14 +64,12 @@ public class PersistenceManager {
     }
 
     public void commit(int taid){
-        File folder = new File("/Users/you/folder/");
-        File[] listOfFiles = folder.listFiles();
 
-        for (File file : listOfFiles) {
-            if (file.isFile()) {
-                System.out.println(file.getName());{
-                }
-            }
-        }
+    }
+    private int c = 0;
+
+    public synchronized int value() {
+        c++;
+        return c;
     }
 }

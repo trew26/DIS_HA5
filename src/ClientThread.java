@@ -1,5 +1,12 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.Hashtable;
 
 public class ClientThread extends Thread {
 
@@ -10,42 +17,44 @@ public class ClientThread extends Thread {
         this.number = number;
     }
 
-    private int getPageID(){
+    public void run() {
+        int sl_milli = 100;
         int pageID_low = number*10;
         int pageID_high = pageID_low + 10;
-        Random r = new Random();
-        return r.nextInt(pageID_high - pageID_low) + pageID_low;
-    }
-    public void run() {
-        while(true) {
+        while (true){
 
             int taid = pm.beginTransaction();
             System.out.println(taid);
-            //   pm.write();
-            pm.write(getPageID(), taid, "first" + taid);
+
+            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "first   " + taid);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(sl_milli);
             }
             catch (InterruptedException e) {
                 return;
             }
             System.out.println(taid);
-            pm.write(getPageID(), taid, "second" + taid);
+            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "second   " + taid);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(sl_milli);
             }
             catch (InterruptedException e) {
                 return;
             }
             System.out.println(taid);
-            pm.write(getPageID(), taid, "third" + taid);
+            pm.write(getRandom(pageID_high, pageID_low), taid, pm.value(), "third   " + taid);
             try {
-                Thread.sleep(2000);
+                Thread.sleep(sl_milli);
             }
             catch (InterruptedException e) {
                 return;
             }
-            System.out.println("Hashtable after insert from ClientCreator: \n" +taid + " " + pm.getBuffer());
+            // pm.commit(taid);
         }
+    }
+
+    private int getRandom(int high, int low){
+        Random r = new Random();
+        return r.nextInt(high - low) + low;
     }
 }

@@ -1,27 +1,15 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.Hashtable;
 
 public class ClientCreator {
 
     public static void main(String[] args) throws IOException {
         PersistenceManager persistenceManager = PersistenceManager.getInstance();
-
-        persistenceManager.write(1, 1, "QWERTZ");
-        persistenceManager.write(2,2,"ASDFGH");
-        persistenceManager.write(1,1,"OVERRIDE");
-
-        System.out.println("Hashtable after insert from ClientCreator: \n" + persistenceManager.getBuffer());
-
         BufferedReader log_reader = persistenceManager.getReader();
-        BufferedWriter log_writer = persistenceManager.getWriter();
-        log_writer.write("Hello from ClientCreator\n");
-        log_writer.flush();
-
+        Hashtable<Integer, String> table =  persistenceManager.getBuffer();
         String line;
-        while ((line = log_reader.readLine()) != null) {
-            System.out.println("Lines in log: " + line);
-        }
 
         Thread t0 = new ClientThread(0);
         Thread t1 = new ClientThread(1);
@@ -30,7 +18,7 @@ public class ClientCreator {
         t1.start();
 
         try {
-            Thread.sleep(10000);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e) {
 
@@ -38,6 +26,16 @@ public class ClientCreator {
 
         t0.interrupt();
         t1.interrupt();
+        //testing
+
+        table.forEach(
+                (k,v) -> System.out.println("Key : " + k + ", Value : " + v));
+
+        System.out.println("\n");
+        while ((line = log_reader.readLine()) != null) {
+            System.out.println("Lines in log: " + line);
+        }
     }
+
 
 }
