@@ -35,7 +35,9 @@ public class ClientCreator {
         //    System.out.println("Lines in log: " + line);
         //}
 
-        persistenceManager.safe(persistenceManager.getBuffer());
+        //persistenceManager.safe(persistenceManager.getBuffer());
+
+        persistenceManager.count_commits();
     }
 
 

@@ -14,6 +14,7 @@ public class PersistenceManager {
     private int id = 1;
     private int c = 0;
     private static PersistenceManager instance;
+    private String stored_lsn;
 
     private PersistenceManager() throws IOException {
         this.buffer = new Hashtable<>();
@@ -98,8 +99,6 @@ public class PersistenceManager {
 
         for(Entry<Integer, String> entry : entrySet) {
 
-            //System.out.println("KEY: " + entry.getKey() + ", VALUE: " + entry.getValue());
-
             // load the data from the current entry of the hashtable
             List<String> items = Arrays.asList(entry.getValue().split("\\s*,\\s*"));
             String taid = items.get(0);
@@ -117,7 +116,23 @@ public class PersistenceManager {
             } catch (IOException e) {
                 System.out.println("Failed to create BufferedWriter. Exception: " + e);
             }
+            this.stored_lsn = lsn;
         }
+    }
+
+    public Integer count_commits() {
+        try {
+            BufferedReader log_reader = this.getReader();
+            String line;
+            while ((line = log_reader.readLine()) != null) {
+                List<String> items = Arrays.asList(line.split(","));
+                // todo
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to read log. Exception: " + e);
+        }
+
+        return 1;
     }
 
 }
