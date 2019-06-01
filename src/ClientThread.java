@@ -49,7 +49,7 @@ public class ClientThread extends Thread {
             catch (InterruptedException e) {
                 return;
             }
-            // pm.commit(taid);
+             pm.commit(taid);
         }
     }
 
