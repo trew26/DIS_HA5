@@ -26,7 +26,7 @@ public class ClientThread extends Thread {
             String taid = pm.beginTransaction();
             System.out.println(taid);
 
-            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "first   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "first");
             try {
                 Thread.sleep(sl_milli);
             }
@@ -34,7 +34,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "second   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "second");
             try {
                 Thread.sleep(sl_milli);
             }
@@ -42,7 +42,7 @@ public class ClientThread extends Thread {
                 return;
             }
             System.out.println(taid);
-            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "third   " + taid);
+            pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "third");
             try {
                 Thread.sleep(sl_milli);
             }

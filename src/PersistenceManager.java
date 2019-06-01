@@ -11,11 +11,10 @@ public class PersistenceManager {
     private Hashtable<Integer, String> buffer;
     private BufferedReader buffered_log_reader;
     private BufferedWriter buffered_log_writer;
-
-    // Eine (versteckte) Klassenvariable vom Typ der eigene Klasse
+    private int id = 1;
+    private int c = 0;
     private static PersistenceManager instance;
 
-    // Verhindere die Erzeugung des Objektes über andere Methoden
     private PersistenceManager() throws IOException {
         this.buffer = new Hashtable<>();
 
@@ -26,11 +25,6 @@ public class PersistenceManager {
         this.buffered_log_writer = new BufferedWriter(log_writer);
     }
 
-    // Eine Zugriffsmethode auf Klassenebene, welches dir '''einmal''' ein konkretes
-    // Objekt erzeugt und dieses zurückliefert.
-    // Durch 'synchronized' wird sichergestellt dass diese Methode nur von einem Thread
-    // zu einer Zeit durchlaufen wird. Der nächste Thread erhält immer eine komplett
-    // initialisierte Instanz.
     public static synchronized PersistenceManager getInstance() throws IOException {
         if (PersistenceManager.instance == null) {
             PersistenceManager.instance = new PersistenceManager();
@@ -65,11 +59,17 @@ public class PersistenceManager {
         return this.buffered_log_writer;
     }
 
-    //begins a new transaction and returns the current taid
-    private int id = 1;
-
     public synchronized String beginTransaction() {
-        return String.format("%02d", id++);
+        Integer new_id = id++;
+
+        try {
+            this.buffered_log_writer.write("BOT " + new_id + "\n");
+            this.buffered_log_writer.flush();
+        } catch (Exception e) {
+            System.out.println("Writing to log failed, Exception: " + e);
+        }
+
+        return String.format("%02d", new_id);
     }
 
     //commits the stored pages to the buffer
@@ -77,7 +77,6 @@ public class PersistenceManager {
 
     }
 
-    private int c = 0;
 
     //return the current LSN value
     public synchronized String value() {
