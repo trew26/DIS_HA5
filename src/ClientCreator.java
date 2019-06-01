@@ -1,8 +1,8 @@
 public class ClientCreator {
 
     public static void main(String[] args) {
-        Thread t0 = new ClientThread("Thread0");
-        Thread t1 = new ClientThread("Thread1");
+        Thread t0 = new ClientThread(0);
+        Thread t1 = new ClientThread(1);
 
         t0.start();
         t1.start();
