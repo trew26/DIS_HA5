@@ -16,7 +16,6 @@ public class PersistenceManager {
     private static PersistenceManager instance;
     private String stored_lsn = "0";
 
-    // Verhindere die Erzeugung des Objektes über andere Methoden
     private PersistenceManager() throws IOException {
         this.buffer = new Hashtable<>();
 
@@ -27,11 +26,6 @@ public class PersistenceManager {
         this.buffered_log_writer = new BufferedWriter(log_writer);
     }
 
-    // Eine Zugriffsmethode auf Klassenebene, welches dir '''einmal''' ein konkretes
-    // Objekt erzeugt und dieses zurückliefert.
-    // Durch 'synchronized' wird sichergestellt dass diese Methode nur von einem Thread
-    // zu einer Zeit durchlaufen wird. Der nächste Thread erhält immer eine komplett
-    // initialisierte Instanz.
     public static synchronized PersistenceManager getInstance() throws IOException {
         if (PersistenceManager.instance == null) {
             PersistenceManager.instance = new PersistenceManager();
@@ -136,20 +130,34 @@ public class PersistenceManager {
 
     public Integer count_commits() {
         int _counter = 0;
-        int log_index = 0;
+        int log_index = -1;
+        int second_log_index = -1;
+        int latest_commit_lsn = 0;
         try {
-            BufferedReader log_reader = this.getReader();
+            BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
             String line;
             // read a line from the log
             while ((line = log_reader.readLine()) != null) {
                 log_index++;
-
                 List<String> items = Arrays.asList(line.split(","));
                 if (line.contains("COMMIT")) {
                     //find the latest lsn of the transaction that is committed in the current log entry
                     int taid = Integer.parseInt(items.get(1));
+                    String line2;
+                    while ((line2 = log_reader.readLine()) != null && second_log_index < log_index) {
+                        second_log_index++;
+                        List<String> items2 = Arrays.asList(line.split(","));
+                        if (items2.size() > 2) {
+                            int taid2 = Integer.parseInt(items2.get(0));
+                            if (taid == taid2) {
+                                latest_commit_lsn =  Integer.parseInt(items2.get(2));
+                            }
+                        }
+                    }
 
-                    _counter++;
+                    if (latest_commit_lsn > Integer.parseInt(this.stored_lsn)) {
+                        _counter++;
+                    }
                 }
             }
         } catch (Exception e) {

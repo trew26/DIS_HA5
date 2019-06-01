@@ -8,8 +8,12 @@ public class ClientCreator {
     public static void main(String[] args) throws IOException {
         PersistenceManager persistenceManager = PersistenceManager.getInstance();
         BufferedReader log_reader = persistenceManager.getReader();
-        Hashtable<Integer, String> table =  persistenceManager.getBuffer();
         String line;
+        //while ((line = log_reader.readLine()) != null) {
+        //    System.out.println(line);
+        //}
+
+        Hashtable<Integer, String> table =  persistenceManager.getBuffer();
 
         Thread t0 = new ClientThread(0);
         Thread t1 = new ClientThread(1);
@@ -36,6 +40,8 @@ public class ClientCreator {
         }
 
         //persistenceManager.safe(persistenceManager.getBuffer());
+
+
 
         persistenceManager.count_commits();
     }
