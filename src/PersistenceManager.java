@@ -1,3 +1,5 @@
+import java.io.File;
+
 public class PersistenceManager {
 
     // Eine (versteckte) Klassenvariable vom Typ der eigene Klasse
@@ -17,4 +19,20 @@ public class PersistenceManager {
         return PersistenceManager.instance;
     }
 
+    private int id = 1;
+    public synchronized int beginTransaction(){
+        return id++;
+    }
+
+    public void commit(int taid){
+        File folder = new File("/Users/you/folder/");
+        File[] listOfFiles = folder.listFiles();
+
+        for (File file : listOfFiles) {
+            if (file.isFile()) {
+                System.out.println(file.getName());{
+                }
+            }
+        }
+    }
 }

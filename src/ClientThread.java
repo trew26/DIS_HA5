@@ -1,14 +1,14 @@
 public class ClientThread extends Thread {
 
-    String name;
+    Integer number;
 
-    public ClientThread(String name) {
-        this.name = name;
+    public ClientThread(Integer number) {
+        this.number = number;
     }
 
     public void run() {
         while(true) {
-            System.out.println("Hello from " + name);
+            System.out.println(number);
             try {
                 Thread.sleep(2000);
             }
