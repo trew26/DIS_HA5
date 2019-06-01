@@ -14,7 +14,7 @@ public class PersistenceManager {
     private int id = 1;
     private int c = 0;
     private static PersistenceManager instance;
-    private String stored_lsn;
+    private String stored_lsn = "0";
 
     // Verhindere die Erzeugung des Objektes über andere Methoden
     private PersistenceManager() throws IOException {
@@ -86,7 +86,7 @@ public class PersistenceManager {
         try {
             FileWriter log_writer = new FileWriter("log.txt", true);
             this.buffered_log_writer = new BufferedWriter(log_writer);
-            buffered_log_writer.write(taid +" comitted \n");
+            buffered_log_writer.write("COMMIT " + taid + "\n");
             buffered_log_writer.flush();
         } catch (Exception e) {
             System.out.println("Fehler");
@@ -135,18 +135,28 @@ public class PersistenceManager {
     }
 
     public Integer count_commits() {
+        int _counter = 0;
+        int log_index = 0;
         try {
             BufferedReader log_reader = this.getReader();
             String line;
+            // read a line from the log
             while ((line = log_reader.readLine()) != null) {
+                log_index++;
+
                 List<String> items = Arrays.asList(line.split(","));
-                // todo
+                if (line.contains("COMMIT")) {
+                    //find the latest lsn of the transaction that is committed in the current log entry
+                    int taid = Integer.parseInt(items.get(1));
+
+                    _counter++;
+                }
             }
         } catch (Exception e) {
             System.out.println("Failed to read log. Exception: " + e);
         }
 
-        return 1;
+        return _counter;
     }
 
 }

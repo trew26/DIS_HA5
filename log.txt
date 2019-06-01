@@ -1,204 +1,60 @@
 BOT 1
 BOT 2
-02,12,00,first,02
-02,10,02,second,02
-01,06,03,second,01
-02,13,04,third,02
-01,09,05,third,01
+02,16,00,first
+02,14,02,second
+01,05,03,second
+01,07,04,third
+02,15,05,third
+COMMIT 02
 BOT 3
-03,18,06,first,03
 BOT 4
-04,02,07,first,04
-03,19,08,second,03
-04,01,09,second,04
-03,18,10,third,03
-04,05,11,third,04
+03,17,06,first
+04,01,07,first
+04,09,09,second
+04,02,10,third
+03,11,11,third
+COMMIT 04
+COMMIT 03
 BOT 5
-05,15,12,first,05
 BOT 6
-06,00,13,first,06
-05,13,14,second,05
-06,02,15,second,06
-05,15,16,third,05
-06,02,17,third,06
+05,05,12,first
+06,17,13,first
+05,03,14,second
+06,13,15,second
+06,14,16,third
+05,01,17,third
+COMMIT 05
 BOT 7
-07,15,18,first,07
 BOT 8
-08,09,19,first,08
+07,09,18,first
+08,19,19,first
 BOT 1
 BOT 2
-02,16,00,first
-02,10,02,second
-01,08,03,second
-02,11,04,third
-01,09,05,third
+01,02,00,first
+01,02,02,second
+02,17,03,second
+02,17,05,third
 BOT 3
-03,17,06,first
+COMMIT 01
 BOT 4
+03,12,06,first
 04,05,07,first
 03,11,08,second
 04,00,09,second
-03,10,10,third
-04,07,11,third
-BOT 5
-05,16,12,first
-BOT 6
-06,09,13,first
-05,14,14,second
-06,07,15,second
-05,11,16,third
-06,09,17,third
-BOT 7
-07,11,18,first
-BOT 8
-08,01,19,first
-BOT 1
-BOT 2
-01,03,00,first
-02,13,02,second
-01,06,03,second
-02,13,04,third
-01,03,05,third
-BOT 3
-BOT 4
-04,09,07,first
-04,04,08,second
-03,10,09,second
-04,00,11,third
-BOT 5
-BOT 6
-06,10,13,first
-05,01,12,first
-05,00,14,second
-06,15,15,second
-05,03,16,third
-06,15,17,third
-BOT 7
-BOT 8
-07,07,18,first
-08,14,19,first
-BOT 1
-BOT 2
-01,01,00,first
-01,04,02,second
-02,16,03,second
-02,19,04,third
-01,05,05,third
-BOT 3
-BOT 4
-03,13,06,first
-04,02,07,first
-03,12,09,second
 04,01,10,third
-03,12,11,third
+03,18,11,third
 BOT 5
+COMMIT 03
 BOT 6
-05,19,12,first
-06,04,13,first
-06,06,14,second
-05,13,15,second
-06,04,17,third
-05,16,16,third
+05,03,12,first
+06,14,13,first
+06,17,14,second
+05,08,15,second
+05,02,16,third
+06,10,17,third
+COMMIT 06
+COMMIT 05
 BOT 7
 BOT 8
-07,02,18,first
-08,10,19,first
-BOT 1
-BOT 2
-02,18,01,first
-01,01,03,second
-01,02,05,third
-BOT 3
-BOT 4
-03,05,06,first
-04,18,07,first
-04,11,08,second
-03,05,09,second
-04,17,11,third
-03,04,10,third
-BOT 5
-BOT 6
-05,06,12,first
-06,12,13,first
-06,11,14,second
-05,07,15,second
-05,08,16,third
-06,15,17,third
-BOT 7
-BOT 8
-08,05,19,first
-BOT 1
-BOT 2
-01,08,01,first
-02,10,03,second
-01,03,04,third
-02,14,05,third
-BOT 3
-BOT 4
-03,07,06,first
-04,19,07,first
-04,14,08,second
-03,00,09,second
-04,10,10,third
-03,08,11,third
-BOT 5
-BOT 6
-05,09,12,first
-06,13,13,first
-06,16,14,second
-05,09,15,second
-05,01,16,third
-BOT 7
-BOT 8
-07,04,18,first
-08,16,19,first
-BOT 1
-BOT 2
-01,01,00,first
-02,19,02,second
-01,05,03,second
-02,14,04,third
-01,05,05,third
-BOT 3
-BOT 4
-03,11,06,first
-04,09,07,first
-04,01,08,second
-03,16,09,second
-04,05,11,third
-BOT 5
-BOT 6
-06,01,13,first
-06,04,14,second
-05,11,15,second
-05,16,16,third
-06,01,17,third
-BOT 7
-BOT 8
-07,16,18,first
-08,04,19,first
-BOT 1
-BOT 2
-01,05,00,first
-01,09,03,second
-02,11,02,second
-02,17,04,third
-01,00,05,third
-BOT 3
-BOT 4
-03,04,06,first
-04,12,07,first
-04,18,08,second
-03,07,09,second
-04,19,11,third
-BOT 5
-BOT 6
-05,19,12,first
-06,06,13,first
-05,12,15,second
-06,03,14,second
-06,09,16,third
-05,16,17,third
-BOT 7
-BOT 8
-08,17,19,first
+07,15,18,first
+08,09,19,first
