@@ -1,6 +1,9 @@
 import java.io.*;
 import java.nio.file.FileSystemNotFoundException;
 import java.util.Hashtable;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class PersistenceManager {
 
@@ -71,5 +74,19 @@ public class PersistenceManager {
     public synchronized int value() {
         c++;
         return c;
+    }
+
+    public void safe (Hashtable buffer) {
+
+        // getting entrySet() into Set
+        Set<Entry<Integer, String>> entrySet = buffer.entrySet();
+
+        // for-each loop
+        for(Entry<Integer, String> entry : entrySet) {
+
+
+
+        }
+
     }
 }
