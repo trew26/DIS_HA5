@@ -18,13 +18,13 @@ public class ClientThread extends Thread {
     }
 
     public void run() {
-        int sl_milli = 100;
-        int pageID_low = number*10;
-        int pageID_high = pageID_low + 10;
+        int sl_milli = 50;
+
         while (true){
 
             String taid = pm.beginTransaction();
-            System.out.println(taid);
+            int pageID_low = Integer.parseInt(taid)*10;
+            int pageID_high = pageID_low + 10;
 
             pm.write(taid, getRandom(pageID_high, pageID_low), pm.value(), "first");
             try {

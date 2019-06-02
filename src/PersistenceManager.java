@@ -12,6 +12,7 @@ public class PersistenceManager {
     private BufferedWriter buffered_log_writer;
     private int id = 1;
     private int c = 0;
+    private int commit_counter = 0;
     private static PersistenceManager instance;
     private String stored_lsn = "0";
 
@@ -79,8 +80,6 @@ public class PersistenceManager {
 
     //commits the stored pages to the buffer
     public synchronized void commit(String taid) {
-
-        Set<Integer> keys = getKeysbyValue(this.buffer, taid);
         try {
             FileWriter log_writer = new FileWriter("log.txt", true);
             this.buffered_log_writer = new BufferedWriter(log_writer);
@@ -105,6 +104,7 @@ public class PersistenceManager {
         }
         return keys;
     }
+
 
     public void safe(Hashtable buffer) {
         Set<Entry<Integer, String>> entrySet = buffer.entrySet();
@@ -204,7 +204,7 @@ public class PersistenceManager {
                     int iTAID = Integer.parseInt(taid);
                     //falls der fehler vor dem commit auftritt
                     if (iLSN > fail_lsn) {
-                        this.redo(iTAID, fail_lsn);
+                        this.redo(iTAID, fail_lsn, iLSN);
 
                     }
                 }
@@ -215,12 +215,12 @@ public class PersistenceManager {
         }
     }
 
-    public void redo(int taid, int fail_lsn) {
+    public void redo(int taid, int fail_lsn, int commit_lsn) {
         try {
-            BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
+            BufferedReader log_reader_redo = new BufferedReader(new FileReader("log.txt"));
             String line;
             // read a line from the log
-            while ((line = log_reader.readLine()) != null) {
+            while ((line = log_reader_redo.readLine()) != null) {
                 if (!(line.contains("COMMIT") || line.contains("BOT") || line.contains("REDO"))) {
                     String[] splitted = line.split(",");
                     String sTAID = splitted[0];
@@ -229,8 +229,18 @@ public class PersistenceManager {
                     String lsn = splitted[2];
                     int iLSN = Integer.parseInt(lsn);
                     String data = splitted[3];
-                    if (iLSN > fail_lsn && iTAID == taid) {
-                        this.write(sTAID, sPID, lsn, data);
+                    //if log entry is before the commit lsn and after the fail lsn
+                    //otherwise it's the correctes log entry
+                    if (iLSN > fail_lsn && commit_lsn > iLSN && iTAID == taid) {
+                        try {
+                            FileWriter log_writer = new FileWriter("log.txt", true);
+                            this.buffered_log_writer = new BufferedWriter(log_writer);
+                            buffered_log_writer.write("REDO " + iLSN + "\n");
+                            buffered_log_writer.flush();
+                        } catch (Exception e) {
+                            System.out.println("Fehler");
+                        }
+                        this.write(sTAID, sPID, this.value(), data);
                     }
                 }
             }
