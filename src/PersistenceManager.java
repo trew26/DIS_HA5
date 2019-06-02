@@ -106,10 +106,10 @@ public class PersistenceManager {
         return keys;
     }
 
-    public void safe (Hashtable buffer) {
+    public void safe(Hashtable buffer) {
         Set<Entry<Integer, String>> entrySet = buffer.entrySet();
 
-        for(Entry<Integer, String> entry : entrySet) {
+        for (Entry<Integer, String> entry : entrySet) {
 
             // load the data from the current entry of the hashtable
             List<String> items = Arrays.asList(entry.getValue().split("\\s*,\\s*"));
@@ -137,7 +137,7 @@ public class PersistenceManager {
         int uncommited_tas = 0;
         int log_index = 0;
         try {
-            BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
+            BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
             String line;
             while ((line = log_reader.readLine()) != null) {
                 log_index++;
@@ -166,18 +166,18 @@ public class PersistenceManager {
         int log_index = 0;
         int latest_ta_lsn = 0;
         try {
-            BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
+            BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
             String line;
 
             // go through the part of the log that has been parsed up to the point of line_limit
-            while ((line = log_reader.readLine()) != null && log_index < line_limit ) {
+            while ((line = log_reader.readLine()) != null && log_index < line_limit) {
                 log_index++;
                 List<String> items2 = Arrays.asList(line.split(","));
 
                 if (items2.size() > 2) {  // the line contains ta information and lsn
                     int curr_taid = Integer.parseInt(items2.get(0));
                     if (taid == curr_taid) {  // if its the ta we are interested in update latest lsbn value
-                        latest_ta_lsn =  Integer.parseInt(items2.get(2));
+                        latest_ta_lsn = Integer.parseInt(items2.get(2));
                     }
                 }
             }
@@ -187,11 +187,11 @@ public class PersistenceManager {
         return latest_ta_lsn;
     }
 
-    public void getWinnerTA(int fail_lsn){
+    public void getWinnerTA(int fail_lsn) {
         int _counter = 0;
         int log_index = 0;
         try {
-            BufferedReader log_reader = this.getReader();
+            BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
             String line;
             // read a line from the log
             while ((line = log_reader.readLine()) != null) {
@@ -201,22 +201,82 @@ public class PersistenceManager {
                     String lsn = splitted[2];
                     int iLSN = Integer.parseInt(lsn);
                     String taid = splitted[1];
+                    int iTAID = Integer.parseInt(taid);
                     //falls der fehler vor dem commit auftritt
-                    if (iLSN > fail_lsn){
-                        Set<Integer> keys = getKeysbyValue(this.buffer, taid);
-                        for (int pid : keys){
+                    if (iLSN > fail_lsn) {
+                        this.redo(iTAID, fail_lsn);
 
-                        }
                     }
-
                 }
+
             }
         } catch (Exception e) {
             System.out.println("Failed to read log. Exception: " + e);
         }
     }
 
-    public void redo(Set<Integer> keys) {
+    public void redo(int taid, int fail_lsn) {
+        try {
+            BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
+            String line;
+            // read a line from the log
+            while ((line = log_reader.readLine()) != null) {
+                if (!(line.contains("COMMIT") || line.contains("BOT") || line.contains("REDO"))) {
+                    String[] splitted = line.split(",");
+                    String sTAID = splitted[0];
+                    int iTAID = Integer.parseInt(sTAID);
+                    String sPID = splitted[1];
+                    String lsn = splitted[2];
+                    int iLSN = Integer.parseInt(lsn);
+                    String data = splitted[3];
+                    if (iLSN > fail_lsn && iTAID == taid) {
+                        this.write(sTAID, sPID, lsn, data);
+                    }
+                }
+            }
 
+        } catch (Exception e) {
+            System.out.println("Failed to read log. Exception: " + e);
+        }
     }
+
+ /*   public void redo(int taid, int fail_lsn) {
+        int _counter = 0;
+        int log_index = 0;
+        Hashtable<Integer, String> table = new Hashtable<>();
+        try {
+            BufferedReader log_reader =  new BufferedReader(new FileReader("log.txt"));
+            String line;
+            // read a line from the log
+            while ((line = log_reader.readLine()) != null) {
+                if (!(line.contains("COMMIT") || line.contains("BOT") || line.contains("REDO"))) {
+                    String[] splitted = line.split(",");
+                    String sTAID = splitted[0];
+                    int iTAID = Integer.parseInt(sTAID);
+                    String sPID = splitted[1];
+                    String lsn = splitted[2];
+                    int iLSN = Integer.parseInt(lsn);
+                    String data = splitted[3];
+                    if (iLSN > fail_lsn && iTAID == taid) {
+                        //save comma separated string as log entry
+                        String csv = "" + taid + "," + sPID + "," + this.value() + "," + data;
+                        int ipid = Integer.parseInt(sPID);
+                        table.put(ipid, csv);
+                        try {
+                            FileWriter log_writer = new FileWriter("log.txt", true);
+                            this.buffered_log_writer = new BufferedWriter(log_writer);
+                            buffered_log_writer.write("REDO, " + lsn + "," + csv + "\n");
+                            buffered_log_writer.flush();
+                        } catch (Exception e) {
+                            System.out.println("Fehler");
+                        }
+                    }
+                }
+            }
+            this.safe(table);
+
+        } catch (Exception e) {
+            System.out.println("Failed to read log. Exception: " + e);
+        }
+    } */
 }
