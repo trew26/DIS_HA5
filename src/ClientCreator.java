@@ -36,7 +36,7 @@ public class ClientCreator {
 
 
         persistenceManager.count_unsaved_commits();
-        persistenceManager.getWinnerTA(10);
+        persistenceManager.getWinnerTA(20);
 
         table.forEach(
                 (k,v) -> System.out.println("Key : " + k + ", Value : " + v));

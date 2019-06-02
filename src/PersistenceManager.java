@@ -190,6 +190,7 @@ public class PersistenceManager {
     public void getWinnerTA(int fail_lsn) {
         int _counter = 0;
         int log_index = 0;
+        int curr_lsn = Integer.parseInt(this.value());
         try {
             BufferedReader log_reader = new BufferedReader(new FileReader("log.txt"));
             String line;
@@ -203,7 +204,7 @@ public class PersistenceManager {
                     String taid = splitted[1];
                     int iTAID = Integer.parseInt(taid);
                     //falls der fehler vor dem commit auftritt
-                    if (iLSN > fail_lsn) {
+                    if (curr_lsn > iLSN && iLSN > fail_lsn) {
                         this.redo(iTAID, fail_lsn, iLSN);
 
                     }
@@ -217,6 +218,7 @@ public class PersistenceManager {
 
     public void redo(int taid, int fail_lsn, int commit_lsn) {
         try {
+            int redone = 0;
             BufferedReader log_reader_redo = new BufferedReader(new FileReader("log.txt"));
             String line;
             // read a line from the log
@@ -241,8 +243,12 @@ public class PersistenceManager {
                             System.out.println("Fehler");
                         }
                         this.write(sTAID, sPID, this.value(), data);
+                        redone++;
                     }
                 }
+            }
+            if (redone != 0){
+            this.commit(Integer.toString(taid));
             }
 
         } catch (Exception e) {
