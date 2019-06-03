@@ -1,86 +1,83 @@
 BOT 01 00
 BOT 02 01
-01,18,03,first
-02,22,02,first
-01,12,04,second
-02,25,05,second
-01,18,06,third
-02,20,07,third
-01,14,08,fourth
-02,27,09,fourth
-01,16,10,fifth
-02,20,11,fifth
+02,24,03,first
+01,13,02,first
+01,17,05,second
+02,27,04,second
+01,13,06,third
+02,28,07,third
+01,10,08,fourth
+02,24,09,fourth
+01,15,10,fifth
+02,29,11,fifth
 COMMIT 01 12
 BOT 03 13
-COMMIT 02 14
-BOT 04 15
-03,37,16,first
-04,49,17,first
-03,37,18,second
+03,37,14,first
+COMMIT 02 15
+BOT 04 16
+04,47,17,first
+03,38,18,second
 04,46,19,second
-03,39,20,third
-04,45,21,third
-03,35,22,fourth
-04,47,23,fourth
-03,34,24,fifth
-04,46,25,fifth
+03,31,20,third
+04,41,21,third
+03,39,22,fourth
+04,46,23,fourth
+03,35,24,fifth
+04,48,25,fifth
 COMMIT 03 26
 BOT 05 27
-05,58,28,first
+05,50,28,first
 COMMIT 04 29
 BOT 06 30
 06,65,31,first
-05,52,32,second
-06,60,33,second
-05,53,34,third
-06,69,35,third
-05,55,36,fourth
-06,67,37,fourth
-05,50,38,fifth
-06,67,39,fifth
-COMMIT 06 40
+05,50,32,second
+06,67,33,second
+05,51,34,third
+06,61,35,third
+05,51,36,fourth
+06,65,37,fourth
+05,55,38,fifth
+06,69,39,fifth
+COMMIT 05 40
 BOT 07 41
-COMMIT 05 42
-BOT 08 43
-07,79,44,first
-08,89,45,first
-07,71,46,second
+07,78,42,first
+SAVED HERE 
+COMMIT 06 43
+BOT 08 44
+08,80,45,first
+07,78,46,second
 08,86,47,second
-07,72,48,third
-08,87,49,third
-07,77,50,fourth
-08,85,51,fourth
+07,71,48,third
+08,89,49,third
+07,72,50,fourth
+08,80,51,fourth
 REDO 22
-03,35,53,fourth
+03,39,53,fourth
 REDO 24
-03,34,54,fifth
-COMMIT 3 55
+03,35,54,fifth
 REDO 21
-04,45,56,third
+04,41,55,third
 REDO 23
-04,47,57,fourth
+04,46,56,fourth
 REDO 25
-04,46,58,fifth
-COMMIT 4 59
-REDO 31
-06,65,60,first
-REDO 33
-06,60,61,second
-REDO 35
-06,69,62,third
-REDO 37
-06,67,63,fourth
-REDO 39
-06,67,64,fifth
-COMMIT 6 65
+04,48,57,fifth
 REDO 28
-05,58,66,first
+05,50,58,first
 REDO 32
-05,52,67,second
+05,50,59,second
 REDO 34
-05,53,68,third
+05,51,60,third
 REDO 36
-05,55,69,fourth
+05,51,61,fourth
 REDO 38
-05,50,70,fifth
-COMMIT 5 71
+05,55,62,fifth
+REDO 31
+06,65,63,first
+REDO 33
+06,67,64,second
+REDO 35
+06,61,65,third
+REDO 37
+06,65,66,fourth
+REDO 39
+06,69,67,fifth

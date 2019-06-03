@@ -131,6 +131,15 @@ public class PersistenceManager {
             }
             this.stored_lsn = lsn;
         }
+        try {
+            FileWriter log_writer = new FileWriter("log.txt", true);
+            this.buffered_log_writer = new BufferedWriter(log_writer);
+            buffered_log_writer.write("SAVED HERE \n");
+            buffered_log_writer.flush();
+        } catch (IOException e) {
+            System.out.println("Failed to log, exception: " + e);
+        }
+
     }
 
     public Integer count_unsaved_commits() {
